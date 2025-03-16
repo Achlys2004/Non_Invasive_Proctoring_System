@@ -82,7 +82,6 @@ func main() {
 	selected := []string{}
 	for key, enabled := range config.Enabled {
 		if enabled {
-			// Map internal event types to UI options
 			if key == "sus_aud" || key == "sus_vid" {
 				if !contains(selected, "media") {
 					selected = append(selected, "media")
@@ -114,16 +113,13 @@ func main() {
 
 		formRunOnce = true
 
-		// Reset all options first
 		for key := range config.Enabled {
 			config.Enabled[key] = false
 		}
 
-		// Apply the selected options with proper mapping
 		for _, v := range selected {
 			config.Enabled[v] = true
 
-			// If "media" is selected, enable both audio and video events
 			if v == "media" {
 				config.Enabled["sus_aud"] = true
 				config.Enabled["sus_vid"] = true
@@ -139,7 +135,6 @@ func main() {
 	fmt.Scanln()
 }
 
-// Helper function to check if a slice contains a string
 func contains(slice []string, s string) bool {
 	for _, item := range slice {
 		if item == s {

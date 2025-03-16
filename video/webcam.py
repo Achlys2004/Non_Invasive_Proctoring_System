@@ -7,10 +7,8 @@ import requests
 import json
 import threading
 
-# Backend URL (you can override it via the start function parameter)
 DEFAULT_URL = "http://localhost:8080/publish"
 
-# Initialize MediaPipe Face Mesh
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
     max_num_faces=5,
@@ -55,10 +53,8 @@ def send_alert(url, alert_type, message):
     """Helper function to send alert messages to backend."""
     try:
         timestamp = time.time()
-        # Create event with the standardized format
         event = {"Type": "sus_vid", "Value": [message, f"{timestamp:.3f}"]}
 
-        # Wrap the event in a data array as expected by main.go
         payload = {"data": [event]}
         json_payload = json.dumps(payload)
         print(f"Sending video alert: {json_payload}")

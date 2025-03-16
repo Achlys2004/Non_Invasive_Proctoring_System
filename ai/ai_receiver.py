@@ -1,5 +1,5 @@
 import numpy as np
-import requests  # ✅ Import requests for logging
+import requests 
 from flask import Flask, request, jsonify
 import time
 from tensorflow.keras.models import load_model
@@ -7,7 +7,6 @@ from collections import deque
 
 app = Flask(__name__)
 
-# Load the trained LSTM model
 print("Loading LSTM model...")
 model = load_model("lstm_autoencoder.keras")
 print("Model loaded successfully.")
@@ -25,16 +24,13 @@ threshold_history = deque(maxlen=stabilization_window)
 calibration_done = False  # Flag to indicate if calibration is complete
 fixed_threshold = None  # Stores final threshold after stabilization
 
-# Buffers for keystroke logging and processing
 keystroke_buffer = deque(maxlen=300)  
 model_buffer = deque(maxlen=batch_size)
 
-# Buffers for error tracking and adaptive thresholding
 error_history = deque(maxlen=window_size)
 user_data = deque(maxlen=window_size)
 
-# **Logging Endpoint**
-LOGGING_URL = "http://localhost:6000/log"  # ✅ Endpoint to send anomaly logs
+LOGGING_URL = "http://localhost:6000/log"  
 
 print("Initializing Flask app...")
 
@@ -89,7 +85,7 @@ def process_keystroke(event):
     Processes an individual keystroke event into a feature vector.
     """
     if len(keystroke_buffer) < 2:
-        return None  # Not enough data to compute features
+        return None 
 
     prev_event = keystroke_buffer[-2]
     prev_key, prev_action, prev_timestamp = prev_event['Value']
@@ -98,7 +94,6 @@ def process_keystroke(event):
     key, action, timestamp = event['Value']
     timestamp = float(timestamp)
 
-    # ✅ Handle multi-character keys properly
     key1 = ord(prev_key[0]) if len(prev_key) == 1 else 0
     key2 = ord(key[0]) if len(key) == 1 else 0
 
@@ -109,7 +104,7 @@ def process_keystroke(event):
         round((timestamp - prev_timestamp) if prev_action == "KU" and action == "KD" else 0, 3)  
     ]
 
-    print(f"Processed keystroke: {features}")  # ✅ Debugging statement
+    print(f"Processed keystroke: {features}") 
     return features
 
 def compute_threshold(reconstruction_errors):
@@ -123,7 +118,6 @@ def compute_threshold(reconstruction_errors):
 
     threshold = np.mean(reconstruction_errors[-window_size:]) + k * np.std(reconstruction_errors)
     
-    # Store the new threshold in history
     threshold_history.append(threshold)
 
     # ✅ Check if the threshold has stabilized
@@ -167,7 +161,6 @@ def detect_anomaly(batch_features):
 
     print(f"Error: {error}, Threshold: {threshold}, Anomaly: {is_anomaly}")  # ✅ Debugging statement
 
-    # ✅ Send anomaly logs to external logging server
     if is_anomaly:
         log_anomaly(error, threshold)
 

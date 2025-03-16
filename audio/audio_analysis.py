@@ -11,7 +11,6 @@ def start_audio_monitoring(url="http://localhost:8080/publish"):
     event_queue = Queue()
 
     def audio_monitoring_loop():
-        # Audio configuration
         FS = 16000
         CHANNELS = 1
         CHUNK_DURATION = 0.03
@@ -38,7 +37,6 @@ def start_audio_monitoring(url="http://localhost:8080/publish"):
 
                         if amplitude > LOUD_THRESHOLD:
                             timestamp = time.time()
-                            # Use the standard format directly
                             event_queue.put(
                                 {
                                     "Type": "sus_aud",
@@ -66,7 +64,6 @@ def start_audio_monitoring(url="http://localhost:8080/publish"):
                 if not event_queue.empty():
                     event = event_queue.get()
                     try:
-                        # Wrap the event in a data array as expected by main.go
                         payload = {"data": [event]}
                         json_payload = json.dumps(payload)
                         print(f"Sending audio event: {json_payload}")
@@ -85,6 +82,5 @@ def start_audio_monitoring(url="http://localhost:8080/publish"):
                 print(f"Error in event_sender: {e}")
                 time.sleep(0.1)
 
-    # Start threads
     threading.Thread(target=audio_monitoring_loop, daemon=True).start()
     threading.Thread(target=event_sender, daemon=True).start()

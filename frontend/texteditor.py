@@ -30,7 +30,6 @@ class TextEditorApp:
         style = ttk.Style()
         style.theme_use("clam")
 
-        # Initialize the log buffer for keystrokes and events
         self.log_entries = []
         self.csv_filename = "keystrokes.csv"
 
@@ -67,7 +66,6 @@ class TextEditorApp:
 
         custom_font = tkFont.Font(family="Helvetica", size=12)
 
-        # Define the questions list
         self.questions = [
             "Question 1: What is your name?",
             "Question 2: What is your age?",
@@ -79,7 +77,6 @@ class TextEditorApp:
         self.page_container = ttk.Frame(main_frame)
         self.page_container.pack(fill="both", expand=True)
 
-        # Create a separate frame for each question (each page)
         for question in self.questions:
             frame = ttk.Frame(self.page_container, padding="10")
             question_label = ttk.Label(
@@ -92,7 +89,7 @@ class TextEditorApp:
                 font=custom_font,
                 bg="#ffffff",
                 fg="#333",
-                height=5,  # Adjust height as needed
+                height=5,  
             )
             answer_widget.pack(fill="both", expand=True)
             # Bind Key Down and Key Up events
@@ -129,7 +126,6 @@ class TextEditorApp:
         start_video_monitoring(url="http://localhost:8080/publish")
 
     def append_log_entry(self, entry):
-        """Callback for external events (like focus events) to add a log entry."""
         self.log_entries.append(entry)
 
     def show_question_page(self, index):
@@ -279,7 +275,7 @@ class TextEditorApp:
                             ],
                         }
                     )
-                else:  # Handles key_press events
+                else:
                     batch_payload.append(
                         {
                             "Type": "key_press",

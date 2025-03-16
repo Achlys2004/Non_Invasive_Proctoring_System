@@ -27,13 +27,10 @@ def records():
         data_point = request.get_json()
         print(f"Received data: {data_point}")  # Debug print
 
-        # Handle both wrapped and unwrapped payloads
         if "data" in data_point:
-            # Wrapped payload (from audio/video)
             for event in data_point["data"]:
                 log(event["Type"], event["Value"])
         else:
-            # Direct payload (from focus events)
             log(data_point["Type"], data_point["Value"])
 
         print("Logged to file")
